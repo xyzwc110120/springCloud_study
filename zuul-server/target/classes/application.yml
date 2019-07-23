@@ -1,0 +1,33 @@
+server:
+  port: 8888
+
+
+spring:
+  application:
+    name: zuul-server
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8090/eureka/
+
+
+zuul:
+  # 添加前缀
+  # prefix: /springCloud
+  # 忽略匹配规则（就算定义了其他规则，Zuul 的默认规则（使用服务名称）也是可以使用的，所以在这里忽略默认规则，使默认规则不可用）
+  ignored-patterns: /*-server/**
+  # 定义路由规则
+  routes:
+    # 规则名称（可随意起）
+    product-server-route:
+      # 资源路径
+      path: /product/**
+      # 服务名称
+      serviceId: product-server
+    order-server-route:
+      path: /order/**
+      serviceId: order-server
+  # 请求头过滤，如果不需要过滤，则为空就行了
+  sensitiveHeaders:

@@ -1,0 +1,18 @@
+server:
+  port: 8090
+
+
+eureka:
+  instance:
+    # Eureka 服务端的实例名称
+    hostname: localhost
+  client:
+    # 是否注册服务，false 表示不向服务中心注册自己
+    registerWithEureka: false
+    # 是否获取注册表
+    fetchRegistry: false
+    # 设置 Eureka Server 交互的地址，查询服务和注册服务都需要依赖这个地址（${属性名}：获取指定属性的属性值）
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  # 是否开启健康检查机制（默认为 true）
+  # server: enable-self-preservation: false

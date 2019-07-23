@@ -1,0 +1,22 @@
+server:
+  port: 9966
+
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          # 配置 GitHub 远程库地址
+          uri: https://github.com/xyzwc110120/springCloud_study_config.git
+          # GitHub 账号密码
+          username: xyzwc110120
+          password: feixia92
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8090/eureka/

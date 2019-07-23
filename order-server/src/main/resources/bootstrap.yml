@@ -1,0 +1,113 @@
+#server:
+#  port: 8110
+
+
+spring:
+  application:
+    # 应用名称，用于注册中心通过名称查找服务
+    name: order-server
+  cloud:
+    config:
+      discovery:
+        # 配置中心服务名称
+        service-id: config-server
+        enabled: true
+      # 远程库分支
+      label: master
+      # 配置文件
+      profile: order-server.yml
+    # RabbitMQ 依赖
+  rabbitmq:
+    host: localhost
+    # 默认端口
+    port: 5672
+    username: guest
+    password: guest
+  # 数据库连接池配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring_cloud_demo?serverTimezone=UTC
+    username: root
+    password: admin
+  zipkin:
+    # 指定 zipkin 服务端地址
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      # 决定了日志记录发送给采集器（zipkin）的概率，0 - 1，默认值为 0.1，即发送十分之一的日志，1 为发送全部
+      probability: 1
+
+
+# Mybatis 配置
+mybatis:
+  # 实体映射类所在包
+  type-aliases-package: com.cyx.springCloud.entities
+  # 映射文件地址
+  mapper-locations: classpath:mapper/*Mapper.xml
+
+
+eureka:
+  client:
+    # 向服务中心注册服务
+    serviceUrl:
+      defaultZone: http://localhost:8090/eureka/
+  instance:
+    instance-id: order-server-${server.port}
+    prefer-ip-address: true
+
+
+# 注意：服务的名称需要和代码中的服务名称一致，不然是修改不了负载均衡策略
+PRODUCT-SERVER:
+  ribbon:
+    # 指定负载均衡策略的实现类，具体策略可查看笔记：21_负载均衡策略
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    # 同一服务器上重试的最大次数（不包括第一次尝试）。默认为：0，第一次尝试失败后便不会重试
+    MaxAutoRetries: 0
+    # 接下来进行重试的服务器的最大数量（不包括第一个服务器），默认为：1
+    MaxAutoRetriesNextServer: 0
+
+
+feign:
+  client:
+    config:
+      default:
+        # 连接超时设置（建立连接所用的时间，两端连接所用的时间）
+        connectTimeout: 3000
+        # 读取超时设置（建立连接后从服务器读取到可用资源所用的时间）
+        readTimeout: 3000
+  hystrix:
+    # Feign 中 Hystrix 默认是关闭的，需要手动开启一下
+    enabled: true
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            # 超时时间设置
+            timeoutInMilliseconds: 3000
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # 暴露 actuator 全部的监控信息
+        include: "*"
+
+
+# 配置 info 信息，访问服务页面时可以查看
+info:
+  app.name: order-server
+  company.name: cyx
+
+
+# 日志输出等级
+logging:
+  level:
+    com:
+      cyx:
+        springCloud:
+          mapper: debug

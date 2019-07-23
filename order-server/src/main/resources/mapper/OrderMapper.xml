@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cyx.springCloud.mapper.OrderMapper">
+
+    <insert id="insertOrder" parameterType="order">
+        INSERT INTO `order` (order_no, member_id, product_id, product_name, product_price, create_time)
+        VALUES (#{orderNo}, #{memberId}, #{productId}, #{productName}, #{productPrice}, NOW())
+    </insert>
+
+</mapper>
